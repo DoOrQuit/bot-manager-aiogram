@@ -8,7 +8,7 @@ import datetime
 # If modifying these scopes, delete the file token.json.
 
 
-class Calendar:
+class GoogleCalendar:
 
     """ Calendar class represents Google Calendar API functionality.
     Requires a calendarId as argument"""

@@ -2,7 +2,7 @@ import asyncio
 from datetime import datetime
 
 import aiohttp
-import requests
+
 from aiogram import types
 
 from bot_config import bot
@@ -65,7 +65,6 @@ class NewCustomer:
 
 
 def parse_date(date):
-
 
     month, day = map(int, date.split("-"))
 

@@ -7,10 +7,10 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 
 from utils import parse_date
 
-from google_calendar.my_calendar import Calendar
+from google_calendar.my_calendar import GoogleCalendar
 
 
-calendar = Calendar("34d26d5fc687a92669649f6988b8ce852006f604a82e154ef055c991bbb24e49@group.calendar.google.com")
+calendar = GoogleCalendar()  # TODO Insert Your CalendarId here
 
 
 class EventBooking(StatesGroup):
