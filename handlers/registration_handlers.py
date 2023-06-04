@@ -1,6 +1,7 @@
 import asyncio
 import re
 
+import requests
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -20,6 +21,7 @@ class UserRegistration(StatesGroup):
 
 async def register(message: types.Message):
     if message.chat.type == 'private':
+
         await message.reply("It's gonna be awesome!\n\nBut I definitely need some information from You for "
                             "registration purpose.\nSo let's get to know You better!")
         await asyncio.sleep(1)
@@ -52,17 +54,25 @@ async def get_email(message: types.Message, state: FSMContext):
 
     async with state.proxy() as data:
         data['email'] = message.text
+        response = requests.get(f"{REGISTRATION_API_ENDPOINT}{data['email']}")
         # Validates an email as per given pattern
         if re.match(email_pattern, data["email"]):
-            await UserRegistration.next()
-            await message.answer("Cool! Now I can mail You. Don't worry. Just joking!)")
-            await asyncio.sleep(0.5)
-            await message.answer("Now set a PASSWORD You would like to use on a website. "
-                                 "But make sure it is safe enough!\n\n"
-                                 "Requirements:\n"
-                                 "- Minimum length of 8 characters;\n"
-                                 "- At least one digit;\n"
-                                 "- Any combination of uppercase, lowercase, and special characters")
+            if response.status_code == 404:
+                await UserRegistration.next()
+                await message.answer("Cool! Now I can mail You. Don't worry. Just joking!)")
+                await asyncio.sleep(0.5)
+                await message.answer("Now set a PASSWORD You would like to use on a website. "
+                                     "But make sure it is safe enough!\n\n"
+                                     "Requirements:\n"
+                                     "- Minimum length of 8 characters;\n"
+                                     "- At least one digit;\n"
+                                     "- Any combination of uppercase, lowercase, and special characters")
+            elif response.status_code == 200:
+                await message.answer("User with a provided email already exists. Please, provide another mail.")
+                await UserRegistration.email.set()
+            else:
+                await message.answer("Unexpected error occurred. Please contact the support.")
+                await state.finish()
         else:
             await message.answer("Email doesn't not match with a pattern given. Please try again.")
             await UserRegistration.email.set()
@@ -99,10 +109,13 @@ async def get_pass2(message: types.Message, state: FSMContext):
 
             async with state.proxy() as clean_data:
                 # New customer object creates
+
                 new_user = NewCustomer(message, email=clean_data["email"], password=clean_data["password1"])
+                print(new_user.user_id)
                 if new_user is not None:
                     # Sends a POST request to server API to create new user (customer) object
-                    await new_user.create(REGISTRATION_API_ENDPOINT)
+                    await new_user.create(REGISTRATION_API_ENDPOINT, telegram_id=new_user.user_id)
+                    await state.finish()
                     await message.answer("User created successfully!")
                 else:
                     await message.answer("Failed to create user. Please, contact technical support for help")

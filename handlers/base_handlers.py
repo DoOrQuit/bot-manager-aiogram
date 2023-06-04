@@ -7,7 +7,7 @@ async def start_command(message: types.Message):
     Base set of buttons to handle initial user requests such as Register, Home and Help.
     """
     # Creating dict of buttons
-    buttons_list = ["/home", "/help", "/registration", "/commands"]
+    buttons_list = ["/home", "/help", "/registration", "/commands", "/book_event"]
     global main_buttons
     main_buttons = ButtonGenerator(buttons_list, buttons_per_row=2, row_or_column='row')
 

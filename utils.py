@@ -1,13 +1,14 @@
 import asyncio
-import re
+from datetime import datetime
+
 import aiohttp
+import requests
 from aiogram import types
 
 from bot_config import bot
 
 
 class NewCustomer:
-
     """ Customer model. Represents a new user (customer) which sends as a POST request to backend API and creates
         a new customer account on a remote server"""
 
@@ -28,7 +29,6 @@ class NewCustomer:
         if self.user_id is not None:
             user = await bot.get_chat(self.user_id)
             user_data = {
-                'telegram_id': user.id,
                 'username': user.username,
                 'first_name': user.first_name,
                 'last_name': user.last_name,
@@ -62,3 +62,32 @@ class NewCustomer:
                     return response_data
                 else:
                     return None
+
+
+def parse_date(date):
+
+
+    month, day = map(int, date.split("-"))
+
+    date_obj = datetime(datetime.today().year, month, day)
+
+    month_names = {
+        1: "January",
+        2: "February",
+        3: "March",
+        4: "April",
+        5: "May",
+        6: "June",
+        7: "July",
+        8: "August",
+        9: "September",
+        10: "October",
+        11: "November",
+        12: "December"
+    }
+
+    month_name = month_names[date_obj.month]
+
+    formatted_date = f"{month_name}-{day}"
+
+    return formatted_date

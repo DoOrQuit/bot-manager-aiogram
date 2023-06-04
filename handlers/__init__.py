@@ -1,3 +1,4 @@
 from .base_handlers import register_base_handlers
 from .registration_handlers import register_signup_handlers
+from .event_booking_handler import register_event_booking_handlers
 

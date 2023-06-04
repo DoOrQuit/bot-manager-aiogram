@@ -7,7 +7,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from dotenv import load_dotenv
 
 # Environment variable config
-load_dotenv("./.env.bot")
+load_dotenv(".env.bot")
 
 
 BOT_TOKEN = os.getenv('BOT_TOKEN')
