@@ -1,5 +1,5 @@
 Bot Manager (Aiogram)
-
+Landing page - https://doorquit.github.io/DoOrQuit/
 This bot utilizes Django server API to make a calls.
 
 Base functionality :
